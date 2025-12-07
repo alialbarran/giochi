@@ -6,6 +6,7 @@
     <title>Giochi - Juegos Retro Rediseñados</title>
     <link rel="stylesheet" href="src/styles/main.css">
     <link rel="stylesheet" href="src/styles/snake.css">
+    <link rel="stylesheet" href="src/styles/scrabble.css">
 </head>
 <body>
     <div id="app">
@@ -19,6 +20,11 @@
             <div id="game-selection" class="screen active">
                 <h2>Selecciona un Juego</h2>
                 <div class="game-list">
+                    <button class="game-card" data-game="scrabble">
+                        <div class="game-icon">🔤</div>
+                        <h3>Scrabble</h3>
+                        <p>Juego de palabras en 4 idiomas: EN, IT, DE, FR</p>
+                    </button>
                     <button class="game-card" data-game="snake">
                         <div class="game-icon">🐍</div>
                         <h3>Snake</h3>
@@ -27,7 +33,7 @@
                     <div class="game-card coming-soon">
                         <div class="game-icon">🎮</div>
                         <h3>Próximamente</h3>
-                        <p>Más juegos en desarrollo...</p>
+                        <p>Sudoku, Invaders, Asteroids, Go...</p>
                     </div>
                 </div>
             </div>
@@ -66,6 +72,27 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Scrabble Game Screen -->
+            <div id="scrabble-screen" class="screen">
+                <button class="back-button">← Menú</button>
+                <div id="scrabble-language-select">
+                    <!-- Language selection will be rendered by JavaScript -->
+                </div>
+                <div id="scrabble-game-area">
+                    <div class="scrabble-info">
+                        <span id="scrabble-score">Puntos: 0</span>
+                        <span id="scrabble-tiles-left">Fichas restantes: 0</span>
+                    </div>
+                    <canvas id="scrabble-canvas"></canvas>
+                    <div class="scrabble-controls">
+                        <button id="new-word-btn">Limpiar Palabra</button>
+                        <button id="submit-word-btn">Enviar Palabra</button>
+                        <button id="shuffle-btn">Mezclar</button>
+                        <button id="pass-btn">Pasar</button>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <footer class="footer">
@@ -78,14 +105,17 @@
     <script type="module" src="src/components/navigation.js"></script>
     <script type="module" src="src/games/snake/game.js"></script>
     <script type="module" src="src/games/snake/levels.js"></script>
+    <script type="module" src="src/games/scrabble/game.js"></script>
     <script type="module">
         // Initialize the application
         import { initNavigation } from './src/components/navigation.js';
         import { initSnakeGame } from './src/games/snake/game.js';
+        import { initScrabbleGame } from './src/games/scrabble/game.js';
         
         document.addEventListener('DOMContentLoaded', () => {
             initNavigation();
             initSnakeGame();
+            initScrabbleGame();
         });
     </script>
 </body>

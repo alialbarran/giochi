@@ -20,7 +20,8 @@ export function initNavigation() {
     screens = {
         gameSelection: document.getElementById('game-selection'),
         levelSelection: document.getElementById('level-selection'),
-        gameScreen: document.getElementById('game-screen')
+        gameScreen: document.getElementById('game-screen'),
+        scrabbleScreen: document.getElementById('scrabble-screen')
     };
 
     // Game selection
@@ -30,6 +31,8 @@ export function initNavigation() {
             const game = card.dataset.game;
             if (game === 'snake') {
                 navigateTo('levelSelection');
+            } else if (game === 'scrabble') {
+                navigateTo('scrabbleScreen');
             }
         });
     });
@@ -46,6 +49,8 @@ export function initNavigation() {
                 // Stop game if running
                 const event = new CustomEvent('stopGame');
                 document.dispatchEvent(event);
+            } else if (currentScreen.id === 'scrabble-screen') {
+                navigateTo('gameSelection');
             }
         });
     });
