@@ -48,6 +48,83 @@
     color: var(--text-primary);
 }
 
+/* Level Selection */
+#scrabble-level-select {
+    text-align: center;
+    padding: var(--spacing-xl);
+}
+
+#scrabble-level-select h2 {
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-primary);
+}
+
+.scrabble-level-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.level-card {
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-align: center;
+}
+
+.level-card:hover {
+    background: var(--tertiary-bg);
+    border-color: var(--accent-color);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 255, 136, 0.2);
+}
+
+.level-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.level-card h3 {
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.level-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.level-difficulty {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.level-difficulty.easy {
+    background: #00cc6f;
+    color: #000;
+}
+
+.level-difficulty.medium {
+    background: #ff9500;
+    color: #000;
+}
+
+.level-difficulty.hard {
+    background: #ff3b30;
+    color: #fff;
+}
+
+/* Game Area */
 #scrabble-game-area {
     display: none;
 }
@@ -74,16 +151,118 @@
     margin-bottom: var(--spacing-md);
     font-size: 1.1rem;
     color: var(--text-secondary);
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
 }
 
 .scrabble-info span {
-    margin: 0 var(--spacing-md);
     color: var(--accent-color);
+}
+
+/* Level Complete Screen */
+#scrabble-level-complete {
+    display: none;
+    padding: var(--spacing-xl);
+}
+
+.level-complete-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.level-complete-content h2 {
+    font-size: 2rem;
+    color: var(--accent-color);
+    margin-bottom: var(--spacing-md);
+}
+
+.level-complete-content p {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.words-summary {
+    margin: var(--spacing-xl) 0;
+    text-align: left;
+}
+
+.words-summary h3 {
+    text-align: center;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-lg);
+}
+
+#completed-words-list {
+    max-height: 400px;
+    overflow-y: auto;
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+}
+
+.word-item {
+    background: var(--tertiary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.word-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.word-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    letter-spacing: 2px;
+}
+
+.word-score {
+    color: #00cc6f;
+    font-weight: bold;
+}
+
+.word-meaning {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.level-complete-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+
+.level-complete-buttons button {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 1.1rem;
+}
+
+#next-level-btn {
+    background: linear-gradient(135deg, var(--accent-color), #00cc6f);
+    color: #000;
+}
+
+#next-level-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 255, 136, 0.3);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .language-grid {
+    .language-grid, .scrabble-level-grid {
         grid-template-columns: 1fr;
     }
     
@@ -92,7 +271,12 @@
         height: auto;
     }
     
-    .scrabble-controls {
+    .scrabble-controls, .level-complete-buttons {
         flex-direction: column;
+    }
+    
+    .scrabble-info {
+        flex-direction: column;
+        gap: var(--spacing-sm);
     }
 }

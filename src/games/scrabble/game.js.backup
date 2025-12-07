@@ -1,8 +1,7 @@
-// Scrabble Game Engine with Level System
+// Scrabble Game Engine
 import { languageData, isValidWord } from './languages.js';
-import { scrabbleLevels, getLevelById, getWordMeaning, renderLevelSelection } from './levels.js';
 
-const BOARD_SIZE = 11;
+const BOARD_SIZE = 11; // 11x11 board (smaller than standard 15x15 for web)
 const TILE_SIZE = 45;
 const HAND_SIZE = 7;
 
@@ -10,18 +9,13 @@ let canvas, ctx;
 let gameState = {
     running: false,
     language: 'en',
-    currentLevel: null,
     board: [],
     bag: [],
     playerHand: [],
     currentWord: [],
     score: 0,
-    wordsCompleted: 0,
-    completedWords: [],
     selectedTile: null,
-    draggedTile: null,
-    timeRemaining: null,
-    timerInterval: null
+    draggedTile: null
 };
 
 export function initScrabbleGame() {
@@ -46,87 +40,22 @@ export function initScrabbleGame() {
     document.getElementById('submit-word-btn')?.addEventListener('click', submitWord);
     document.getElementById('shuffle-btn')?.addEventListener('click', shuffleHand);
     document.getElementById('pass-btn')?.addEventListener('click', pass);
-    
-    // Level selection listener
-    document.addEventListener('startScrabbleLevel', (e) => {
-        startLevel(e.detail.levelId);
-    });
-}
-
-function startLevel(levelId) {
-    const level = getLevelById(levelId);
-    if (!level) return;
-    
-    gameState.currentLevel = level;
-    gameState.score = 0;
-    gameState.wordsCompleted = 0;
-    gameState.completedWords = [];
-    gameState.board = createEmptyBoard();
-    gameState.bag = createLetterBag(gameState.language);
-    
-    // Remove wildcards if not available in this level
-    if (!level.wildcardsAvailable) {
-        gameState.bag = gameState.bag.filter(tile => tile.letter !== '_');
-    }
-    
-    gameState.playerHand = drawTiles(HAND_SIZE);
-    gameState.currentWord = [];
-    gameState.running = true;
-    
-    // Setup timer if level has time limit
-    if (level.timeLimit) {
-        gameState.timeRemaining = level.timeLimit;
-        gameState.timerInterval = setInterval(updateTimer, 1000);
-    } else {
-        gameState.timeRemaining = null;
-    }
-    
-    // Hide level selection, show game
-    document.getElementById('scrabble-level-select').style.display = 'none';
-    document.getElementById('scrabble-game-area').style.display = 'block';
-    document.getElementById('scrabble-level-complete').style.display = 'none';
-    
-    updateGameInfo();
-    draw();
-}
-
-function updateTimer() {
-    if (!gameState.running || gameState.timeRemaining === null) return;
-    
-    gameState.timeRemaining--;
-    updateGameInfo();
-    
-    if (gameState.timeRemaining <= 0) {
-        timeUp();
-    }
-}
-
-function timeUp() {
-    gameState.running = false;
-    if (gameState.timerInterval) {
-        clearInterval(gameState.timerInterval);
-        gameState.timerInterval = null;
-    }
-    
-    // Check if level was completed
-    const level = gameState.currentLevel;
-    if (gameState.wordsCompleted >= level.wordsRequired && 
-        gameState.score >= level.minScore) {
-        showLevelComplete();
-    } else {
-        alert(`¡Se acabó el tiempo! Completaste ${gameState.wordsCompleted}/${level.wordsRequired} palabras con ${gameState.score} puntos.`);
-    }
 }
 
 export function startGame(language) {
     gameState.language = language;
+    gameState.score = 0;
+    gameState.board = createEmptyBoard();
+    gameState.bag = createLetterBag(language);
+    gameState.playerHand = drawTiles(HAND_SIZE);
+    gameState.currentWord = [];
+    gameState.running = true;
     
-    // Hide language selection
     document.getElementById('scrabble-language-select').style.display = 'none';
+    document.getElementById('scrabble-game-area').style.display = 'block';
     
-    // Show level selection
-    document.getElementById('scrabble-level-select').style.display = 'block';
-    renderLevelSelection();
+    updateScore();
+    draw();
 }
 
 function createEmptyBoard() {
@@ -352,10 +281,8 @@ function clearCurrentWord() {
 }
 
 function submitWord() {
-    const level = gameState.currentLevel;
-    
-    if (gameState.currentWord.length < level.minWordLength) {
-        alert(`La palabra debe tener al menos ${level.minWordLength} letras`);
+    if (gameState.currentWord.length < 2) {
+        alert('La palabra debe tener al menos 2 letras');
         return;
     }
     
@@ -365,14 +292,6 @@ function submitWord() {
         // Calculate score
         const wordScore = gameState.currentWord.reduce((sum, tile) => sum + tile.points, 0);
         gameState.score += wordScore;
-        gameState.wordsCompleted++;
-        
-        // Store completed word with meaning
-        gameState.completedWords.push({
-            word: word,
-            score: wordScore,
-            meaning: getWordMeaning(word, gameState.language)
-        });
         
         // Clear current word
         gameState.currentWord = [];
@@ -386,69 +305,12 @@ function submitWord() {
             }
         });
         
-        updateGameInfo();
+        updateScore();
         draw();
         
-        // Check if level is complete
-        if (gameState.wordsCompleted >= level.wordsRequired && 
-            gameState.score >= level.minScore) {
-            gameState.running = false;
-            if (gameState.timerInterval) {
-                clearInterval(gameState.timerInterval);
-                gameState.timerInterval = null;
-            }
-            showLevelComplete();
-        }
+        alert(`¡Palabra válida! +${wordScore} puntos`);
     } else {
         alert('Palabra no válida');
-    }
-}
-
-function showLevelComplete() {
-    // Hide game area
-    document.getElementById('scrabble-game-area').style.display = 'none';
-    
-    // Show level complete screen
-    const completeScreen = document.getElementById('scrabble-level-complete');
-    completeScreen.style.display = 'block';
-    
-    // Populate level complete info
-    document.getElementById('level-complete-title').textContent = 
-        `¡Nivel ${gameState.currentLevel.name} Completado!`;
-    document.getElementById('level-complete-score').textContent = 
-        `Puntuación Final: ${gameState.score} puntos`;
-    document.getElementById('level-complete-words').textContent = 
-        `Palabras completadas: ${gameState.wordsCompleted}`;
-    
-    // Show word meanings
-    const wordsList = document.getElementById('completed-words-list');
-    wordsList.innerHTML = '';
-    
-    gameState.completedWords.forEach(wordData => {
-        const wordItem = document.createElement('div');
-        wordItem.className = 'word-item';
-        wordItem.innerHTML = `
-            <div class="word-header">
-                <span class="word-text">${wordData.word}</span>
-                <span class="word-score">+${wordData.score} pts</span>
-            </div>
-            <div class="word-meaning">${wordData.meaning}</div>
-        `;
-        wordsList.appendChild(wordItem);
-    });
-    
-    // Setup next level button
-    const nextLevelBtn = document.getElementById('next-level-btn');
-    const currentLevelId = gameState.currentLevel.id;
-    const nextLevel = getLevelById(currentLevelId + 1);
-    
-    if (nextLevel) {
-        nextLevelBtn.style.display = 'block';
-        nextLevelBtn.onclick = () => {
-            startLevel(nextLevel.id);
-        };
-    } else {
-        nextLevelBtn.style.display = 'none';
     }
 }
 
@@ -469,28 +331,13 @@ function shuffleHand() {
 }
 
 function pass() {
+    // Exchange current word tiles
     clearCurrentWord();
 }
 
-function updateGameInfo() {
-    const level = gameState.currentLevel;
-    document.getElementById('scrabble-score').textContent = 
-        `Puntos: ${gameState.score}/${level.minScore}`;
-    document.getElementById('scrabble-tiles-left').textContent = 
-        `Fichas restantes: ${gameState.bag.length}`;
-    document.getElementById('scrabble-words-count').textContent = 
-        `Palabras: ${gameState.wordsCompleted}/${level.wordsRequired}`;
-    
-    // Timer
-    const timerElement = document.getElementById('scrabble-timer');
-    if (level.timeLimit) {
-        const minutes = Math.floor(gameState.timeRemaining / 60);
-        const seconds = gameState.timeRemaining % 60;
-        timerElement.textContent = `Tiempo: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-        timerElement.style.display = 'inline';
-    } else {
-        timerElement.style.display = 'none';
-    }
+function updateScore() {
+    document.getElementById('scrabble-score').textContent = `Puntos: ${gameState.score}`;
+    document.getElementById('scrabble-tiles-left').textContent = `Fichas restantes: ${gameState.bag.length}`;
 }
 
 function renderLanguageSelection() {
