@@ -213,7 +213,7 @@ export const levels = [
         theme: {
             bgColor: '#16213e',
             snakeColor: '#e94560',
-            foodColor: '#0f3460',
+            foodColor: '#f39c12',
             obstacleColor: '#0a1929'
         },
         obstacles: [

@@ -1,6 +1,12 @@
 // Snake Game Engine
 import { levels, getLevelById, renderLevelSelection } from './levels.js';
 
+// Constants
+const CANVAS_SIZE = 600;
+const TILE_COUNT = 30;
+const SPECIAL_FOOD_RESPAWN_DELAY = 5000;
+const SPECIAL_FOOD_TIMEOUT = 10000;
+
 let canvas, ctx;
 let gameState = {
     running: false,
@@ -15,7 +21,7 @@ let gameState = {
     specialFood: null,
     gameLoop: null,
     gridSize: 20,
-    tileCount: 30
+    tileCount: TILE_COUNT
 };
 
 export function initSnakeGame() {
@@ -23,8 +29,8 @@ export function initSnakeGame() {
     ctx = canvas.getContext('2d');
     
     // Set canvas size
-    canvas.width = 600;
-    canvas.height = 600;
+    canvas.width = CANVAS_SIZE;
+    canvas.height = CANVAS_SIZE;
     
     // Calculate grid settings
     gameState.gridSize = canvas.width / gameState.tileCount;
@@ -147,7 +153,7 @@ function gameUpdate() {
         updateScore();
         gameState.specialFood = null;
         // Spawn new special food later
-        setTimeout(spawnSpecialFood, 5000);
+        setTimeout(spawnSpecialFood, SPECIAL_FOOD_RESPAWN_DELAY);
         ate = true;
     }
     
@@ -315,12 +321,12 @@ function spawnSpecialFood() {
     
     gameState.specialFood = position;
     
-    // Special food disappears after 10 seconds
+    // Special food disappears after timeout
     setTimeout(() => {
         if (gameState.specialFood === position) {
             gameState.specialFood = null;
         }
-    }, 10000);
+    }, SPECIAL_FOOD_TIMEOUT);
 }
 
 function checkObstacleCollision(position) {
