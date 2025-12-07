@@ -1,0 +1,22 @@
+{
+  "name": "giochi",
+  "version": "0.1.0",
+  "description": "Juegos retro re-diseñados y otros más originales",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve .",
+    "test": "echo \"Tests will be added as the project grows\" && exit 0"
+  },
+  "keywords": [
+    "games",
+    "retro",
+    "snake",
+    "javascript",
+    "html5"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}
