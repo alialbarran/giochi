@@ -1,0 +1,164 @@
+/* Snake Game Specific Styles */
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--secondary-bg);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+}
+
+.game-info {
+    display: flex;
+    gap: var(--spacing-lg);
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.game-info span {
+    color: var(--text-secondary);
+}
+
+#level-name {
+    color: var(--accent-color);
+}
+
+/* Canvas */
+#game-canvas {
+    display: block;
+    margin: 0 auto;
+    background: var(--game-bg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.game-controls {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+}
+
+.game-controls p {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+#pause-button {
+    min-width: 150px;
+}
+
+/* Game Over Screen */
+.game-over-screen {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--secondary-bg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+    min-width: 350px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.game-over-screen.active {
+    display: block;
+}
+
+.game-over-screen h2 {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--danger-color);
+}
+
+.game-over-screen p {
+    font-size: 1.2rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-secondary);
+}
+
+#final-score {
+    color: var(--accent-color);
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.level-complete-message {
+    color: var(--success-color) !important;
+    font-weight: 600;
+    margin-top: var(--spacing-sm);
+}
+
+.game-over-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    margin-top: var(--spacing-lg);
+}
+
+.game-over-buttons button {
+    flex: 1;
+}
+
+/* Level description */
+.level-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: var(--spacing-xs);
+}
+
+/* High score indicator */
+.high-score-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: rgba(0, 255, 136, 0.2);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    color: var(--success-color);
+    margin-left: var(--spacing-xs);
+}
+
+/* Responsive canvas */
+@media (max-width: 768px) {
+    #game-canvas {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .game-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    
+    .game-info {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        text-align: center;
+    }
+    
+    .game-over-screen {
+        min-width: 90%;
+    }
+    
+    .game-over-buttons {
+        flex-direction: column;
+    }
+}
