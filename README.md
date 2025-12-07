@@ -201,7 +201,6 @@ MIT License - siéntete libre de usar, modificar y distribuir.
 
 ## 🙏 Agradecimientos
 
-- Inspiración de diseño: [huxe.com](https://huxe.com)
 - Comunidad de desarrolladores de juegos retro
 - Todos los contribuidores del proyecto
 
